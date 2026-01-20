@@ -1,0 +1,21 @@
+{
+  "name": "realtime-sync-db",
+  "version": "1.0.0",
+  "description": "Self-hosted realtime sync database with REST + WebSocket and admin dashboard.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  },
+  "dependencies": {
+    "basic-auth": "2.0.1",
+    "better-sqlite3": "11.7.0",
+    "cors": "2.8.5",
+    "express": "4.19.2",
+    "helmet": "7.1.0",
+    "jsonwebtoken": "9.0.2",
+    "nanoid": "5.0.7",
+    "ws": "8.17.1"
+  }
+}
