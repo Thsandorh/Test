@@ -1,136 +1,143 @@
 <!DOCTYPE html>
-<html lang="hu">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Film Sync Admin</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 24px; background: #0f172a; color: #e2e8f0; }
-    h1, h2 { color: #38bdf8; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 24px; }
-    th, td { border: 1px solid #1e293b; padding: 8px; text-align: left; }
-    th { background: #1e293b; }
-    tr:nth-child(even) { background: #111827; }
-    .section { background: #0b1220; padding: 16px; border-radius: 12px; margin-bottom: 24px; }
-  </style>
-</head>
-<body>
-  <h1>Film Sync Admin</h1>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Realtime DB Admin</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        margin: 24px;
+        color: #111827;
+        background: #f9fafb;
+      }
+      h1 {
+        margin-bottom: 8px;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 14px;
+      }
+      .muted {
+        color: #6b7280;
+        font-size: 13px;
+      }
+      .actions a {
+        display: inline-block;
+        margin-right: 8px;
+        text-decoration: none;
+        color: #2563eb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Realtime DB Admin</h1>
+    <p class="muted">Basic overview of users, data, devices, and recent activity.</p>
+    <p class="muted" id="last-updated">Last updated: --</p>
 
-  <div class="section">
-    <h2>Felhasználók</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Név</th>
-          <th>Létrehozva</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in users %}
-        <tr>
-          <td>{{ row["id"] }}</td>
-          <td>{{ row["display_name"] or "-" }}</td>
-          <td>{{ row["created_at"] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="actions">
+      <a href="#" id="refresh">Refresh</a>
+    </div>
 
-  <div class="section">
-    <h2>Eszközök</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Eszköz ID</th>
-          <th>User ID</th>
-          <th>Név</th>
-          <th>Frissítve</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in devices %}
-        <tr>
-          <td>{{ row["id"] }}</td>
-          <td>{{ row["user_id"] }}</td>
-          <td>{{ row["name"] }}</td>
-          <td>{{ row["updated_at"] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="grid" id="stats"></div>
 
-  <div class="section">
-    <h2>Legutóbbi filmnézés</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Film ID</th>
-          <th>Pozíció</th>
-          <th>Hossz</th>
-          <th>Frissítve</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in progress %}
-        <tr>
-          <td>{{ row["user_id"] }}</td>
-          <td>{{ row["film_id"] }}</td>
-          <td>{{ row["position_seconds"] }} mp</td>
-          <td>{{ row["duration_seconds"] }} mp</td>
-          <td>{{ row["updated_at"] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="card">
+      <h2>Recent Data Updates</h2>
+      <div id="data-table"></div>
+    </div>
 
-  <div class="section">
-    <h2>Kedvencek</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Film ID</th>
-          <th>Létrehozva</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in favorites %}
-        <tr>
-          <td>{{ row["user_id"] }}</td>
-          <td>{{ row["film_id"] }}</td>
-          <td>{{ row["created_at"] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div class="card">
+      <h2>Recent Audit Log</h2>
+      <div id="audit-table"></div>
+    </div>
 
-  <div class="section">
-    <h2>Beállítások</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Kulcs</th>
-          <th>Frissítve</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in settings %}
-        <tr>
-          <td>{{ row["user_id"] }}</td>
-          <td>{{ row["key"] }}</td>
-          <td>{{ row["updated_at"] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</body>
+    <div class="card actions">
+      <h2>Exports</h2>
+      <a href="/admin/export/users.json">Download users.json</a>
+      <a href="/admin/export/data.json">Download data.json</a>
+      <a href="/admin/export/audit.csv">Download audit.csv</a>
+    </div>
+
+    <script>
+      const renderTable = (rows, columns) => {
+        if (!rows.length) {
+          return '<p class="muted">No entries.</p>';
+        }
+        const header = columns.map((col) => `<th>${col.label}</th>`).join('');
+        const body = rows
+          .map(
+            (row) =>
+              `<tr>${columns
+                .map((col) => `<td>${row[col.key] ?? ''}</td>`)
+                .join('')}</tr>`
+          )
+          .join('');
+        return `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
+      };
+
+      const loadAdminData = () =>
+        fetch('/admin/data')
+          .then((res) => res.json())
+          .then((payload) => {
+          document.getElementById('stats').innerHTML = [
+            { label: 'Users', value: payload.usersCount },
+            { label: 'Devices', value: payload.deviceCount },
+            { label: 'Data Items', value: payload.dataCount },
+          ]
+            .map(
+              (stat) =>
+                `<div class="card"><h3>${stat.value}</h3><p class="muted">${stat.label}</p></div>`
+            )
+            .join('');
+
+          document.getElementById('data-table').innerHTML = renderTable(payload.recentData, [
+            { key: 'user_id', label: 'User' },
+            { key: 'collection', label: 'Collection' },
+            { key: 'key', label: 'Key' },
+            { key: 'updated_at', label: 'Updated' },
+            { key: 'deleted_at', label: 'Deleted' },
+          ]);
+
+          document.getElementById('audit-table').innerHTML = renderTable(payload.recentAudit, [
+            { key: 'user_id', label: 'User' },
+            { key: 'action', label: 'Action' },
+            { key: 'ip', label: 'IP' },
+            { key: 'status', label: 'Status' },
+            { key: 'created_at', label: 'Time' },
+          ]);
+          document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleString()}`;
+          return true;
+        })
+          .catch(() => {
+            document.getElementById('stats').innerHTML =
+              '<div class="card"><p class="muted">Failed to load admin data.</p></div>';
+          });
+
+      document.getElementById('refresh').addEventListener('click', (event) => {
+        event.preventDefault();
+        loadAdminData();
+      });
+
+      loadAdminData();
+    </script>
+  </body>
 </html>
