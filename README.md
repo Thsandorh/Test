@@ -1,30 +1,28 @@
-# Realtime Sync Database
+# Film Sync API
 
-Self-hosted realtime sync database with REST + WebSocket APIs, per-user authorization rules, and a secured admin dashboard.
-It behaves like a lightweight, Firestore-style store: users write data into collections/keys and subscribe to realtime updates.
+Egyszeru, sajat hosztolasu realtime szinkron a filmnezos apphoz.
+SQLite + FastAPI + WebSocket, hogy a telefon/TV/tablabees kozott azonnal frissuljon:
+- filmnezesi pozicio
+- kedvencek
+- beallitasok
+- eszkoz regisztracio
 
-## Features
+A rendszer JWT alapu hitelesitest hasznal (Firestore-szeru szabalyokkal), es van vedett admin felulet.
 
-- REST + WebSocket realtime sync.
-- Per-user access rules enforced by JWT.
-- Rate limiting, audit logging, and token revocation.
-- Soft deletes, TTL expiry, delta sync (`updated_since`), and bulk upserts.
-- Admin dashboard with exports and IP allowlisting.
-- Export endpoints for JSON/CSV snapshots.
-- Health endpoint with basic metrics.
-
-## Quick Start
+## Inditas
 
 ```bash
-npm install
-export JWT_SECRET="change-this-long-secret"
-export ADMIN_API_KEY="change-this-admin-key"
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+export JWT_SECRET="egy-nagyon-hosszu-titok"
+export ADMIN_API_KEY="admin-api-kulcs"
 export ADMIN_USERNAME="admin"
-export ADMIN_PASSWORD="strong-password"
-node server.js
+export ADMIN_PASSWORD="eros-jelszo"
+uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
-Optional CORS allowlist:
+Opcionalis CORS:
 
 ```bash
 export CORS_ALLOW_ORIGINS="https://app.example.com,https://tv.example.com"
